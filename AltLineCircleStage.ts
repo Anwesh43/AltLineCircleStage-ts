@@ -1,4 +1,6 @@
 const w : number = window.innerWidth, h : number = window.innerHeight
+console.log(w)
+console.log(h)
 const nodes : number = 5
 class AltLineCircleStage {
     canvas : HTMLCanvasElement = document.createElement('canvas')
@@ -113,7 +115,7 @@ class ALCNode {
         context.lineWidth = Math.min(w, h) / 60
         context.lineCap = 'round'
         context.save()
-        context.translate(gap * i + gap * sc1 + gap/2, h/2)
+        context.translate(gap * this.i + gap * sc2 + gap/2, h/2)
         context.beginPath()
         for (var i =0; i < 360; i++) {
           const x = r * scale1 * Math.cos(i * Math.PI/180)
