@@ -76,3 +76,67 @@ class Animator {
         }
     }
 }
+
+class ALCNode {
+    prev : ALCNode
+    state : State = new State()
+    next : ALCNode
+
+    constructor(private i : number) {
+        this.addNeighbor()
+    }
+
+    addNeighbor() {
+        if (this.i < nodes - 1) {
+            this.next = new ALCNode(this.i + 1)
+            this.next.prev = this
+        }
+    }
+
+    draw(context : CanvasRenderingContext2D) {
+        const gap : number = w / nodes
+        const index : number = this.i%2
+        const r = gap/4
+        const sc1 = Math.min(0.5, this.state.scale) * 2
+        const sc2 = Math.min(0.5, Math.max(this.state.scale - 0.5, 0)) * 2
+        const scale1 = (1 - index) * sc1 + (1 - sc1) * index
+        context.strokeStyle = 'white'
+        context.lineWidth = Math.min(w, h) / 60
+        context.lineCap = 'round'
+        context.save()
+        context.translate(gap * i + gap * sc1 + gap/2, h/2)
+        context.beginPath()
+        for (var i =0; i < 360; i++) {
+          const x = r * scale1 * Math.cos(i * Math.PI/180)
+          const y = r * Math.sin(i * Math.PI/180)
+            if (i == 0) {
+                context.moveTo(x, y)
+            } else {
+                context.lineTo(x,y)
+            }
+        }
+        context.stroke()
+        context.restore()
+    }
+
+    update(cb : Function) {
+        this.state.update(cb)
+    }
+
+    startUpdating(cb : Function) {
+        this.state.startUpdating(cb)
+    }
+
+    getNext(dir : number, cb : Function) : ALCNode {
+        var curr = this.prev
+        if (dir == 1) {
+            curr = this.next
+        }
+        if (curr) {
+            return curr
+        }
+        cb()
+        return this
+    }
+
+}
