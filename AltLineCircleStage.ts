@@ -3,7 +3,8 @@ const nodes : number = 5
 class AltLineCircleStage {
     canvas : HTMLCanvasElement = document.createElement('canvas')
     context : CanvasRenderingContext2D
-
+    linkedALC : LinkedALC = new LinkedALC()
+    animator : Animator = new Animator()
     constructor() {
         this.initCanvas()
     }
@@ -18,11 +19,19 @@ class AltLineCircleStage {
     render() {
         this.context.fillStyle = '#212121'
         this.context.fillRect(0, 0, w, h)
+        this.linkedALC.draw(this.context)
     }
 
     handleTap() {
         this.canvas.onmousedown = () => {
-
+            this.linkedALC.startUpdating(() => {
+                this.animator.start(() => {
+                    this.render()
+                    this.linkedALC.update(() => {
+                        this.animator.stop()
+                    })
+                })
+            })
         }
     }
 
